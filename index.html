@@ -1,1 +1,370 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>sitenegit.com · Kısayol Merkezi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      background: #f5f6f8;
+      color: #0f172a;
+    }
+
+    /* TICKER */
+    .ticker {
+      width: 100%;
+      background: transparent;
+      color: #0f172a;
+      overflow: hidden;
+      padding: 8px 0;
+      font-size: 12px;
+      letter-spacing: 0.03em;
+    }
+
+    .ticker-inner {
+      white-space: nowrap;
+      display: inline-block;
+      padding-left: 100%;
+      animation: ticker-move 22s linear infinite;
+    }
+
+    .ticker-highlight {
+      color: #ec4899;
+      font-weight: 700;
+    }
+
+    .ticker-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.2);
+      font-size: 11px;
+      margin-right: 10px;
+      letter-spacing: 0.02em;
+      color: #334155;
+    }
+
+    @keyframes ticker-move {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* PAGE */
+    .page {
+      max-width: 640px;
+      margin: 20px auto 56px;
+      padding: 0 16px;
+    }
+
+    /* HEADER */
+    .headline {
+      font-size: 28px;
+      font-weight: 800;
+      margin: 0 0 20px;
+      text-align: center;
+      color: #0f172a;
+    }
+
+    /* FEATURED */
+    .featured-section {
+      margin: 22px 0;
+    }
+
+    .featured-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #475569;
+      margin-bottom: 8px;
+    }
+
+    .featured-scroller {
+      overflow: hidden;
+      padding: 2px 0;
+    }
+
+    .featured-track {
+      display: inline-flex;
+      gap: 10px;
+      animation: featured-scroll 26s linear infinite;
+    }
+
+    @keyframes featured-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .featured-card {
+      flex: 0 0 auto;
+      min-width: 145px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: white;
+      border: 1px solid #cbd5e1;
+      font-size: 13px;
+      font-weight: 600;
+      color: #334155;
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .featured-card:hover {
+      background: #f1f5f9;
+      border-color: #ec4899;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+    }
+
+    /* SEARCH */
+    .search-block { margin-top: 24px; margin-bottom: 8px; }
+
+    .search-label {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #475569;
+    }
+
+    .search-caption {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-bottom: 8px;
+    }
+
+    form {
+      display: flex;
+      gap: 8px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid #cbd5e1;
+      background: white;
+      font-size: 14px;
+    }
+
+    input[type="text"]:focus {
+      border-color: #ec4899;
+      box-shadow: 0 0 0 2px rgba(236,72,153,0.2);
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #ec4899;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      transition: 0.15s;
+    }
+
+    button:hover {
+      background: #db2777;
+    }
+
+    /* RANDOM BUTTON */
+    .random-block {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .random-btn {
+      background: #2563eb;
+      color: white;
+      padding-inline: 20px;
+    }
+
+    .random-btn:hover {
+      background: #1e40af;
+    }
+
+    /* AUTOCOMPLETE */
+    .suggestions {
+      margin-top: 6px;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      background: white;
+      box-shadow: 0 14px 30px rgba(0,0,0,0.08);
+      font-size: 13px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .suggestion-item {
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .suggestion-item:hover {
+      background: #f1f5f9;
+    }
+
+    @media (max-width: 480px) {
+      form { flex-direction: column; }
+      button, .random-btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <div class="ticker-inner">
+      <span class="ticker-tag">sitenegit.com</span>
+      Hızlı giriş · Favori siteni yaz → aç
+      &nbsp;&nbsp;•&nbsp;&nbsp;
+      Yedek alan adımız: <span class="ticker-highlight">sitenegit1.com</span>
+      &nbsp;&nbsp;•&nbsp;&nbsp;
+      Doğru bağlantıda kal
+    </div>
+  </div>
+
+  <main class="page">
+
+    <h1 class="headline">Favori sitene git.</h1>
+
+    <!-- Featured -->
+    <section class="featured-section">
+      <div class="featured-title">Öne çıkan kısayollar</div>
+
+      <div class="featured-scroller">
+        <div class="featured-track" id="featuredTrack">
+
+          <div class="featured-card" data-key="betpas">
+            <span>Betpas</span>
+            <small>Sitene git</small>
+          </div>
+          <div class="featured-card" data-key="restbet">
+            <span>Restbet</span>
+            <small>Sitene git</small>
+          </div>
+          <div class="featured-card" data-key="bethand">
+            <span>Bethand</span>
+            <small>Sitene git</small>
+          </div>
+          <div class="featured-card" data-key="verabet">
+            <span>Verabet</span>
+            <small>Sitene git</small>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Search -->
+    <section class="search-block">
+      <div class="search-label">Site adını yaz</div>
+      <div class="search-caption">Örnek: betpas, restbet, bethand, verabet…</div>
+
+      <form id="searchForm">
+        <input id="siteInput" type="text" autocomplete="off" />
+        <button type="submit">BUL</button>
+      </form>
+
+      <div id="suggestions" class="suggestions"></div>
+    </section>
+
+    <!-- Random -->
+    <section class="random-block">
+      <button type="button" class="random-btn" id="randomBtn">Şansına bir yer aç ✨</button>
+    </section>
+
+  </main>
+
+  <script>
+    const SITES = {
+      betpas: "https://shoort.in/betpas",
+      restbet: "https://shoort.in/restbet",
+      bethand: "https://shoort.in/bethand",
+      verabet: "https://veragit.link"
+    };
+
+    function normalize(str) {
+      return (str || "")
+        .toLowerCase()
+        .trim()
+        .replace(/[ç]/g, "c").replace(/[ğ]/g, "g")
+        .replace(/[ı]/g, "i").replace(/[ö]/g, "o")
+        .replace(/[ş]/g, "s").replace(/[ü]/g, "u")
+        .replace(/\s+/g, "");
+    }
+
+    function goToKey(key) {
+      const url = SITES[key];
+      if (url) window.open(url, "_blank");
+      else alert("Bu site kayıtlı değil.");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const track = document.getElementById("featuredTrack");
+      track.innerHTML += track.innerHTML;
+    });
+
+    const inputEl = document.getElementById("siteInput");
+    const suggestionsEl = document.getElementById("suggestions");
+
+    inputEl.addEventListener("input", () => {
+      const value = normalize(inputEl.value);
+
+      if (!value) {
+        suggestionsEl.style.display = "none";
+        return;
+      }
+
+      const matches = Object.keys(SITES).filter(k => k.startsWith(value));
+
+      if (!matches.length) {
+        suggestionsEl.style.display = "none";
+        return;
+      }
+
+      suggestionsEl.innerHTML = matches
+        .map(k => `
+          <div class="suggestion-item" data-key="${k}">
+            <span>${k.charAt(0).toUpperCase() + k.slice(1)}</span>
+            <small>Sitene git</small>
+          </div>
+        `)
+        .join("");
+
+      suggestionsEl.style.display = "block";
+    });
+
+    suggestionsEl.addEventListener("click", e => {
+      const item = e.target.closest(".suggestion-item");
+      if (!item) return;
+      goToKey(item.dataset.key);
+    });
+
+    document.getElementById("searchForm").addEventListener("submit", e => {
+      e.preventDefault();
+      goToKey(normalize(inputEl.value));
+      suggestionsEl.style.display = "none";
+    });
+
+    document.getElementById("randomBtn").addEventListener("click", () => {
+      const keys = Object.keys(SITES);
+      const randomKey = keys[Math.floor(Math.random() * keys.length)];
+      goToKey(randomKey);
+    });
+  </script>
+</body>
+</html>
 
